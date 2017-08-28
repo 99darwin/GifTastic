@@ -20,7 +20,7 @@ var animals = ["Guinea Pigs", "Dogs", "Cats", "Goats", "Alpacas",
 // =================================================================
 // FUNCTIONS
 
-// Display animal 10 gifs
+// Display 10 animal gifs
 function displayAnimalGifs() {
 
 	// Change data attr for clicked id
@@ -36,11 +36,11 @@ function displayAnimalGifs() {
 		url: queryURL,
 		method: "GET"
 	}).done(function(response) {
-		// TODO: Append ratings to page above images
-
-		// TODO: Append images to page in #animal-view
+		//Append images & ratings to page
 			// Loop through animals.length
 			for (var i = 0; i < animals.length; i++) {
+				
+				// ---- Animal View ----
 				// Create animal view div
 				var animalView = $('<div>');
 				// attr() animal view div with #animal-view
@@ -48,10 +48,12 @@ function displayAnimalGifs() {
 				// Insert animalView within column
 				$('.animalGifs').after(animalView);
 
+				// ---- GIFS ----
 				// Animated url
 				var animateURL = response.data[i].images.original.url;
 				// Still url
 				var stillURL = response.data[i].images.original_still.url;
+				console.log(stillURL);
 				// Create <img> tag
 				var img = $('<img>');
 				// attr() class attribute "gif"
@@ -67,16 +69,38 @@ function displayAnimalGifs() {
 				// append images to div
 				$('#animal-view').prepend(img);
 
-				// Ratings
+				// ----  Ratings ----
+				// Retrieve ratings from api
 				var rating = response.data[i].rating;
-				var ratingDiv = $('<div>' + 'Rating : ' + rating + '</div>' + '<br>');
+				// Create rating div and insert response
+				var ratingDiv = $('<div>' + 'Rating : ' + rating + '</div>');
+				// Give rating div id of #rating
 				ratingDiv.attr('id', 'rating');
+				// Insert rating div before each gif
 				$(ratingDiv).insertBefore('#animal-view');
 			}
+
+				// State change function
+				$('.gif').on('click', function() {
+					var state = $(this).attr('data-state');
+					if (state === 'still') {
+						$(this).attr('src', $(this).attr('data-animate'));
+						$(this).attr('data-state', 'animate');
+					}
+					if (state === 'animate') {
+						$(this).attr('src', $(this).attr('data-still'));
+						$(this).attr('data-state', 'still');
+					}
+				});
+
+
 	});	
+
 }
- 
-// Populate new search terms as buttons
+
+$(document).on('click', '.animal', displayAnimalGifs);
+
+// Function to render buttons upon page initialization
 function renderButtons() {
 
 	// Use .empty() to avoid repeat buttons
@@ -85,38 +109,33 @@ function renderButtons() {
 	for (i = 0; i < animals.length; i++) {
 		// Generate buttons in html using jquery
 		var a = $('<button>');
+		// Add class .animal to newly created buttons
 		a.addClass('animal');
+		// Add data-name attribute equal to position in animals array
 		a.attr('data-name', animals[i]);
+		// Write newly created data to button
 		a.text(animals[i]);
+		// Append newly created button to button section
 		$('#btn-section').append(a);
 
 	}			
 }
 
-// Add animal button onclick action
+// Populate new search terms as buttons
 $('#add-animal').on('click', function(event) {
 	event.preventDefault();
 	var animal = $('#animal-input').val().trim();
 	// Push new animals to array
 	animals.push(animal);
+	console.log(animals);
 	// Call renderButtons
 	renderButtons();
+	// Clear search form upon button click
+	$('#animal-input').val('');
 });
 
-// State change function
-$('.gif').on('click', function() {
-	var state = $(this).attr('data-state');
-	if (state === 'still') {
-		$(this).attr('src', $(this).attr('data-animate'));
-		$(this).attr('data-state', 'animate');
-	}
-	if (state === 'animate') {
-		$(this).attr('src', $(this).attr('data-still'));
-		$(this).attr('src', 'still');
-	}
-});
 
-$(document).on('click', '.animal', displayAnimalGifs);
+
 
 renderButtons();
 	

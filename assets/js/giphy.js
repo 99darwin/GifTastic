@@ -28,7 +28,8 @@ function displayAnimalGifs() {
 
 	// Create queryURl framework
 	var api_key = 'd98945d47bd04f889c2e49844b7f7a85';
-	var queryURL = 'https://api.giphy.com/v1/gifs/search?api_key=' + api_key + '&q=' + animal + '&limit=10&offset=0&rating=PG&lang=en';
+	var limit = 20;
+	var queryURL = 'https://api.giphy.com/v1/gifs/search?api_key=' + api_key + '&q=' + animal + '&limit=' + limit + '&offset=0&rating=PG&lang=en';
 
 
 	// Create Ajax call
@@ -38,7 +39,7 @@ function displayAnimalGifs() {
 	}).done(function(response) {
 		//Append images & ratings to page
 			// Loop through animals.length
-			for (var i = 0; i < animals.length; i++) {
+			for (var i = 0; i < response.data.length; i++) {
 				
 				// ---- Animal View ----
 				// Create animal view div
@@ -50,7 +51,12 @@ function displayAnimalGifs() {
 
 				// ---- GIFS ----
 				// Animated url
+				// if (i === 10) {
+				// 	debugger;
+				// }
+				console.log(response.data);
 				var animateURL = response.data[i].images.original.url;
+				console.log('animated url: ' + animateURL);
 				// Still url
 				var stillURL = response.data[i].images.original_still.url;
 				console.log(stillURL);
@@ -98,7 +104,7 @@ function displayAnimalGifs() {
 
 }
 
-$(document).on('click', '.animal', displayAnimalGifs);
+$(document.body).on('click', '.animal', displayAnimalGifs);
 
 // Function to render buttons upon page initialization
 function renderButtons() {
@@ -106,15 +112,15 @@ function renderButtons() {
 	// Use .empty() to avoid repeat buttons
 	$('#btn-section').empty();
 	// Loop through animals array { 
-	for (i = 0; i < animals.length; i++) {
+	for (var j = 0; j < animals.length; j++) {
 		// Generate buttons in html using jquery
 		var a = $('<button>');
 		// Add class .animal to newly created buttons
 		a.addClass('animal');
 		// Add data-name attribute equal to position in animals array
-		a.attr('data-name', animals[i]);
+		a.attr('data-name', animals[j]);
 		// Write newly created data to button
-		a.text(animals[i]);
+		a.text(animals[j]);
 		// Append newly created button to button section
 		$('#btn-section').append(a);
 
@@ -124,18 +130,14 @@ function renderButtons() {
 // Populate new search terms as buttons
 $('#add-animal').on('click', function(event) {
 	event.preventDefault();
-	var animal = $('#animal-input').val().trim();
+	var newAnimal = $('#animal-input').val().trim();
 	// Push new animals to array
-	animals.push(animal);
-	console.log(animals);
+	animals.push(newAnimal);
 	// Call renderButtons
 	renderButtons();
 	// Clear search form upon button click
 	$('#animal-input').val('');
 });
-
-
-
 
 renderButtons();
 	

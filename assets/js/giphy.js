@@ -28,7 +28,7 @@ function displayAnimalGifs() {
 
 	// Create queryURl framework
 	var api_key = 'd98945d47bd04f889c2e49844b7f7a85';
-	var limit = 20;
+	var limit = 10;
 	var queryURL = 'https://api.giphy.com/v1/gifs/search?api_key=' + api_key + '&q=' + animal + '&limit=' + limit + '&offset=0&rating=PG&lang=en';
 
 

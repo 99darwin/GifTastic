@@ -50,16 +50,9 @@ function displayAnimalGifs() {
 				$('.animalGifs').after(animalView);
 
 				// ---- GIFS ----
-				// Animated url
-				// if (i === 10) {
-				// 	debugger;
-				// }
-				console.log(response.data);
 				var animateURL = response.data[i].images.original.url;
-				console.log('animated url: ' + animateURL);
 				// Still url
 				var stillURL = response.data[i].images.original_still.url;
-				console.log(stillURL);
 				// Create <img> tag
 				var img = $('<img>');
 				// attr() class attribute "gif"
